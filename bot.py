@@ -47,21 +47,25 @@ def get_product_links_from_post(post_id):
 def process_url_list(text):
     urls = re.findall(r"https?://\S+", text)
     result = []
+
     for url in urls:
         if "/share/" in url:
             redirected = get_final_url_from_redirect(url)
-            result.append(f"🔁 {url} ->\n{redirected}\n")
+            result.append(f"🔁 {url} ->\n\n{redirected}\n")
             continue
 
         post_id = extract_post_id_from_url(url)
         if not post_id:
-            result.append(f"🚫 {url} -> No valid post/reel ID found.\n")
+            result.append(f"🚫 {url} -> No valid post/reel ID found.")
             continue
 
         links = get_product_links_from_post(post_id)
-        formatted_links = "\n".join(links)
-        result.append(f"✅ {url} ->\n{formatted_links}\n")
-    return "\n".join(result)
+        formatted_links = "\n\n".join(links)  # blank line between each link
+        result.append(f"✅ {url} ->\n\n{formatted_links}\n")
+
+    return "\n\n".join(result)  # gap between blocks
+
+
 
 
 def send_telegram(chat_id, text):
